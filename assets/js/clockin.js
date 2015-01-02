@@ -346,10 +346,6 @@ function ToggleButton(toggle_on, toggle_off) {
 	self.button.on('click', toggle);
 }
 
-
-
-
-
 function clockin_dialog(title, content, dtype, options) 
 {
 	switch(dtype) {

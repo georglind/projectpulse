@@ -192,14 +192,14 @@ body .purple {
 }
 
 .clockin_timers_start {
-	font-size: 24pt;
+	font-size: 22pt;
 	display: inline-block;
 	text-align: left;
 	vertical-align: bottom;
 	padding-bottom: 4px;
 	cursor: pointer;
 	color: #888;
-	color: rgba(0,0,0,.5);
+	color: rgba(0,0,0,.3);
 }
 
 .icon-spin2:hover {
