@@ -1,0 +1,431 @@
+body {
+	font-family: arial, helvetica, sans-serif;
+	font-size: 11pt;
+	color: #222;
+	background: #fdfdfd;
+}
+
+/*selections*/
+::selection {
+  background: none; 
+}
+
+::-moz-selection {
+  background: none; /* Gecko Browsers */
+}
+
+input::selection, textarea::selection {
+	background: rgba(255,255,255,.3); /* WebKit/Blink Browsers */
+}
+
+input::-moz-selection, textarea::-moz-selection {
+	background: rgba(255,255,255,.3); /* WebKit/Blink Browsers */
+}
+
+/*placeholder*/
+::-webkit-input-placeholder {
+   color: rgba(0,0,0,.4)
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   color: rgba(0,0,0,.4)
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   color: rgba(0,0,0,.4)
+}
+
+:-ms-input-placeholder {  
+   color: rgba(0,0,0,.4)
+}
+
+/* h1 */
+
+menu {
+	margin: 20px 30px;
+	padding: 0;
+}
+
+h1 {
+	/*margin: 20px 30px;*/
+	margin: 0;
+	padding: 0;
+}
+
+
+/*body*/
+.body {
+	margin: 20px 30px 10px;
+}
+
+.clockins {
+	margin-bottom: 10px;
+}
+
+/* clockin */
+.clockin 
+{
+	width: 280px;
+	margin: 0 10px 10px 0;
+	display: inline-block;
+	background-color: #FFBF00;
+	vertical-align: top;
+}
+
+/* colors */
+body .green {
+	background-color: #97A686;
+}
+
+body .amber {
+	background-color: #F5D497;
+}
+
+body .blue {
+	background-color: #7CB9D9;
+}
+
+body .orange {
+	background-color: #FFA463
+}
+
+body .red {
+	background-color: #CC3529;
+}
+
+body .purple {
+	background-color: #918FB3
+}
+
+/* controls */
+.clockin_controls {
+	padding: 6px;
+}
+
+.clockin_title {
+	width: 198px;
+	font-size: 14pt;
+	margin: 6px 5px 0;
+	font-weight: bold;
+	background: none;
+	border: 0;
+	outline: none
+}
+
+.clockin_colors {
+	padding: 4px 2px;
+	font-size: 12pt;
+	display: inline-block;
+	vertical-align: top;
+	color: rgba(0,0,0,.3);
+	cursor: pointer;
+}
+
+.clockin_colors:hover {
+	color: #e5e5e5;
+	color: rgba(0,0,0,1);
+	background-color: #888;
+	background-color: rgba(255,255,255,.4);
+	border-radius: 4px
+}
+
+.clockin_delete {
+	padding: 4px 2px;
+	font-size: 12pt;
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 2px;
+	color: #aaa;
+	color: rgba(0,0,0,.3);
+	cursor: pointer;
+}
+
+.clockin_delete:hover {
+	color: black;
+}
+
+/* description */
+.clockin_desc {
+	width: 260px;
+	font-size: 10pt;
+	border: 0;
+	margin: 0 0 0 10px;	
+	height: 28px;
+	background: none;
+}
+
+.clockin_desc:focus {
+	outline: none;
+}
+
+/* timers */
+.clockin_timers {
+	padding: 2px 5px;
+}
+
+.clockin_timers_total, .clockin_timers_week {
+	width: 56px;
+	font-size: 8pt;
+	display: inline-block;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.clockin_timers_total div, .clockin_timers_week div {
+	width: 56px;
+	font-size: 14pt;
+	font-weight: bold
+}
+
+.clockin_timers_today {
+	width: 110px;
+	font-size: 8pt;
+	display: inline-block;
+	text-align: center;
+	vertical-align: middle
+}
+
+.clockin_timers_today div{
+	width: 110px;
+	font-size: 18pt;
+	font-weight: bold
+}
+
+.clockin_timers_start {
+	font-size: 24pt;
+	display: inline-block;
+	text-align: left;
+	vertical-align: bottom;
+	padding-bottom: 4px;
+	cursor: pointer;
+	color: #888;
+	color: rgba(0,0,0,.5);
+}
+
+.icon-spin2:hover {
+	color: black
+}
+
+.animate-spin {
+	color: black;
+}
+
+/* button */
+.clockin_button {
+	cursor: pointer;
+	background-color: #ccc;
+	border-radius: 2px;
+	padding: 6px 10px;
+	display: inline-block;
+}
+
+.clockin_button_off {
+	background-color: red;
+}
+
+/* tasks */
+
+
+
+.clockin_tasks {
+	width: 280px;
+	height: 176px;
+	overflow-y: scroll;
+}
+
+.clockin_add_task {
+	color: black;
+	color: rgba(0,0,0,.7);
+	width: 280px;
+	padding: 9px 0;
+	font-size: 10pt;
+	border-radius: 0 0 4px 4px;
+	text-align: center;
+	display: inline-block;
+	cursor: pointer;
+	background-color: #aaa;
+	background-color: rgba(0,0,0,.06);
+}
+
+.clockin_add_task:hover {
+	background-color: #888;
+	background-color: rgba(0,0,0,.15);
+	color: #222;
+}
+
+.clockin_task {
+	width: 280px;
+	margin-top: 10px;
+	border-bottom: 1px solid rgba(0,0,0,.1);
+}
+
+.clockin_task input {
+	width: 210px;
+	font-weight: bold;
+	margin-bottom: 4px;
+	margin-left: 10px;
+	font-size: 11.5pt;
+	border: 0;
+	outline: none;
+	background: none;
+}
+
+.clockin_task_delete {
+	width: 24px;
+	height: 20px;
+	font-size: 14pt;
+	cursor: pointer;
+	vertical-align: middle;
+	display: inline-block;
+	color: rgba(0,0,0,.3);
+}
+
+.clockin_task_delete:hover {
+	color: rgba(0,0,0,1);
+}
+
+.clockin_task_open .clockin_task_state, .clockin_task_closed .clockin_task_state {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	font-size: 14pt;
+	cursor: pointer;
+	vertical-align: middle;
+	text-align: center;
+}
+
+/* dialog */
+.clockin_popup {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+	text-align: center;
+}
+
+.clockin_blur {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	background-color: black;
+	opacity: .0001;
+	-webkit-transition: all .2s ease-out; 
+	-moz-transition: all .2s ease-out; 
+	-o-transition: all .2s ease-out; 
+	transition: all .2s ease-out;
+}
+
+.clockin_dialog {
+	z-index: 10;
+	width: 500px;
+	margin: 130px auto 150px;
+	text-align: left;
+	background: #f0f0f0;
+	position: relative;
+	border-radius: 2px;
+	box-shadow: 0 0 20px #444;
+	opacity: 0.001;
+	-webkit-transition: all .2s ease-out; 
+	-moz-transition: all .2s ease-out; 
+	-o-transition: all .2s ease-out; 
+	transition: all .2s ease-out;
+}
+
+.clockin_dialog p {
+	line-height: 1.2em;
+}
+
+.clockin_dialog form {
+	display: inline-block;
+}
+
+.clockin_dialog input, .clockin_dialog select {
+	padding: 2px;
+	font-size: 12pt;
+	margin: 0 5px;
+	display: inline-block;
+}
+
+.clockin_dialog_close {
+	position: absolute;
+	font-size: 14pt;
+	top: 5px;
+	right: 10px;
+	padding: 5px;
+	color: #888;
+}
+
+.clockin_dialog_close:hover {
+	color: black;
+}
+
+.clockin_dialog_title {
+	font-weight: 800;
+	font-size: 14pt;
+	background-color: #e0e0e0;
+	padding: 10px 15px;
+	border-radius: 2px 2px 0 0;
+}
+
+.clockin_dialog .clockin_dialog_content {
+	padding: 15px 15px;
+}
+
+
+.clockin_dialog .clockin_dialog_content p:first-child {
+	margin-top: 2px;
+}
+
+.clockin_dialog_content textarea {
+	font-family: Courier;
+	font-size: 9pt;
+	width: 98%;
+	height: 200px;
+	overflow: auto;
+	border: 4px solid #ccc;
+	outline: none;
+	/*white-space: nowrap; */
+}
+
+.clockin_dialog .clockin_dialog_sections {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.clockin_dialog .clockin_dialog_sections li {
+	margin: 0 -10px 0 -10px;
+	padding: 15px;
+	/*border-radius: 2px;*/
+	/*background: #ccc;*/
+	border-top: 1px solid #ddd;
+}
+
+
+.clockin_thanks {
+	max-width: 500px;
+	margin: 0 auto;
+	border-top: 1px solid #888;
+	margin-top: 60px;
+	padding-top: 30px;
+	text-align: center;
+}
+
+.clockin_thanks ul {
+	list-style-type: none;
+}
+
+.clockin_thanks li {
+	margin: 10px;
+}
+
+
+/* misc */
+.center {
+	text-align: center;
+}

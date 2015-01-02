@@ -1,0 +1,310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" manifest="ppulse.manifest?reva1">
+<head>
+<title>Project Pulse</title>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8"> 
+<meta charset="utf-8">
+<meta name="robots" content="index, follow">
+<meta name="description" content="Manage projects and log their time.">
+<meta name="distribution" content="web">
+<meta name="keyword" content="todo, log, project, manage, clock in">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Project Pulse">
+<meta property="og:url" content="http://georglind.dk/log">
+<meta property="og:site_name" content="georglind.dk/log">
+<meta property="og:image" content="http://georgling.dk/log/assets/icon/clockin.jpg"/>
+<!-- Web App -->
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<link rel="apple-touch-icon" href="assets/icon/apple-touch-icon.png" />
+<link rel="apple-touch-icon" sizes="57x57" href="assets/icon/apple-touch-icon-57x57.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="assets/icon/apple-touch-icon-72x72.png" />
+<link rel="apple-touch-icon" sizes="76x76" href="assets/icon/apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="assets/icon/apple-touch-icon-114x114.png" />
+<link rel="apple-touch-icon" sizes="120x120" href="assets/icon/apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" sizes="144x144" href="assets/icon/apple-touch-icon-144x144.png" />
+<link rel="apple-touch-icon" sizes="152x152" href="assets/icon/apple-touch-icon-152x152.png" />
+<!-- Links and Scripts -->
+<script src="assets/js/jquery-1.10.2.min.js"></script>
+
+<link href="assets/fontello/css/animation.css" rel="stylesheet" type="text/css"/>
+<link href="assets/fontello/css/fontello-codes.css" rel="stylesheet" type="text/css"/>
+<link href="assets/fontello/css/fontello-embedded.css" rel="stylesheet" type="text/css"/>
+<link href="assets/fontello/css/fontello.css" rel="stylesheet" type="text/css"/>
+
+<link href="assets/css/clockin.css" rel="stylesheet" type="text/css"/>
+
+<style>
+	.clockin_more { 
+		font-size: 20pt;
+		text-decoration: none; 
+		display: none;
+		padding: 5px 20px; 
+		text-align: center;
+		color: #666;
+		cursor: pointer;
+	}
+
+	.clockin_more span {font-size: 30pt; vertical-align: middle}
+
+	.clockin_more:hover {
+		color: black;
+	}
+
+	.waiting {
+		padding: 20px 0;
+		text-align: center;
+	}
+
+	.waiting img {
+		vertical-align: middle;
+	}
+</style>
+</head>
+<body>
+
+<div class="menu_center">
+<menu>
+<h1><span class="icon-heart"></span> Project Pulse</h1>
+</menu>
+</div>
+
+<div class="body"> <!-- open body -->
+
+<div id="clockins" class="clockins"></div>
+<div id="preload" class="waiting"><img src="./assets/img/load.gif"/><p>Please wait a moment. The app is loading...</p></div>
+
+<a id="more" class="clockin_more"><span style="">+</span> new project</a>
+
+<div class="clockin_thanks">
+<p>Project Pulse has been built using some great tools and libraries, and a lot of the credit goes their way. Here I list them all in random order:</p>
+<ul>
+	<li><a href="http://www.jquery.com/">jQuery</a> &ndash; founded by John Resig.</li>
+	<li><a href="http://fortawesome.github.io/Font-Awesome/">Font Awesome</a> by Dave Gandy.</li>
+	<li><a href="http://rubaxa.github.io/Sortable/">Sortable</a> by rubaXa.</li>
+</ul>
+</div>
+
+</div> <!-- close body -->
+
+
+<script type="text/javascript" src="assets/js/sortable/Sortable.min.js"></script>
+<script type="text/javascript" src="assets/js/clockin.js"></script>
+
+
+<script type="text/javascript">
+$().ready( function() {
+
+	var list = $('#clockins');
+	var projects = {};
+	var store = [];
+	var pid = 0;
+	var save_enabled = true;
+
+	// load current slot.
+	try {
+		var save_slot = parseInt(localStorage.getItem("current"));
+
+		if (isNaN(save_slot))
+		{
+			save_slot = 0;
+		}
+
+		var load_projects = localStorage.getItem("projects" + save_slot);
+		var save_slot = (save_slot + 1) % 10;
+	} 
+	catch (err)
+	{
+		console.log('Test01')
+		var load_projects = false;
+		var save_slot = 0;
+	}
+
+	// load saved time
+	try {
+		var last_saved_time = localStorage.getItem("saved");
+	} 
+	catch (err)
+	{
+		console.log('Test02')
+		var last_saved_time = false;
+	}
+
+	// which models to load
+	if (load_projects == undefined || load_projects == false)
+	{	
+		$('#preload').remove();  // remove preloader
+
+		var wrap = $('<div data-project=' + pid + '></div>')
+				.on('remove', function(e) { if (e.target == this) { var l = $(this).attr('data-project'); delete projects[l]; } } );
+
+		list.append(wrap);
+		
+		projects[0] = new Project(wrap);
+		projects[0].setup();
+		pid = 1;
+	}
+	else
+	{
+		store = $.parseJSON(load_projects);
+
+		console.log(store)
+
+		if (store.length > 0)
+		{
+			setTimeout( function(){ loadProjects(); }, 200);
+		}
+
+		function loadProjects()
+		{
+			$('#preload').remove(); // remove preloader
+
+			for (var i = 0; i < store.length; i++)
+			{
+				if (store[i] !== false)
+				{
+					var wrap = $('<div data-project=' + pid + '></div>')
+						.on('remove', function(e) { if (e.target == this) { var l = $(this).attr('data-project'); delete projects[l]; }});
+					
+					list.append(wrap);
+					projects[pid] = new Project(wrap);
+					projects[pid].load_from_object(store[i]);
+					// projects[pid].minimize();
+					
+					pid += 1;
+				}
+			}
+		}
+	}
+
+	setInterval(store_projects, 2000);
+
+	function store_projects() 
+	{
+		console.log('Test03')
+		if (!save_enabled)
+		{
+			return;
+		}
+
+		try 
+		{
+			var save_test = localStorage.getItem("saved");
+		}
+		catch (err) 
+		{
+			var save_test = false;
+		}
+
+		if (last_saved_time == save_test)
+		{
+			try 
+			{
+				var projectdump = [];
+				$('.clockin').each(function(){
+					var i = $(this).attr('data-project');
+
+					if (projects[i] != undefined) {
+						var dump = projects[i].dump();
+						projectdump.push(dump);	
+					}
+				});
+
+				projectdump = JSON.stringify(projectdump, null, null);
+
+				localStorage.setItem("current", save_slot)
+				localStorage.setItem("projects" + save_slot, projectdump);
+
+				last_saved_time = new Date().getTime();
+				localStorage.setItem("saved", last_saved_time)
+			}
+			catch(err)
+			{
+				console.log(err);
+				return;
+			}
+		}
+		else
+		{
+			save_enabled = false;
+			clockin_dialog('Other tabs open','<p>You have an instance of ClockIn open in another tab.</p><p>It is very messy to have multiple tabs overwriting the model data in turn.</p><p>Thus, saving has from now on been <i>disabled</i> for this tab.</p>', 'warning');
+		}
+	}
+
+	var container = document.getElementById("clockins");
+	var sort = new Sortable(container, {
+	  animation: 0, // ms, animation speed moving items when sorting, `0` — without animation
+	  handle: ".clockin_controls", // Restricts sort start click/touch to the specified element
+	  draggable: ".clockin", // Specifies which items inside the element should be sortable
+	  ghostClass: "sortable_ghost",
+	});
+
+	$('#more').css('display', 'block').click(function(e){
+		var wrap = $('<div data-project=' + pid + '></div>')
+				.on('remove', function(e) { if (e.target == this) { var l = $(this).attr('data-project'); delete projects[l]; }});
+		list.append(wrap);
+		
+		projects[pid] = new Project(wrap);
+		projects[pid].setup();
+		pid += 1;
+	});
+
+	var haspos = location.href.indexOf('#');
+
+	if (haspos > 0)
+	{
+		var content = $('<div></div>')
+			.append('<p>You have visited a link, which contains a Clock In project. Do you wish to import it?.</p>')
+			.append($('<div class="center"></div>')
+				.append($('<a class="clockin_button">Yes, import it</a>')
+					.on('click touchstart', function(){
+
+						$('#clockin_popup').remove();
+						
+						var hash = location.href.substr(location.href.indexOf('#')+1);
+	
+						var wrap = $('<div data-project=' + pid + '></div>')
+						list.prepend(wrap);
+
+						var h = new Project(wrap);
+
+						if (h.load_from_string(hash)) 
+						{
+							projects[pid] = h;
+							pid += 1;
+							wrap.on('remove', function(e) { if (e.target == this) { var l = $(this).attr('data-project'); delete projects[l]; } } );
+							window.location.hash = '';
+						}
+						else
+						{
+							wrap.remove();
+							clockin_dialog('Problem with import','It wasn\'t possible to import your project. Sorry.', 'error');
+						}
+					})
+				)
+				.append('<span style="display: inline-block; width: 80px">&nbsp;</span>')
+				.append($('<a class="clockin_button red">No</a>')
+					.on('click touchstart', function(){
+						window.location.hash = '';
+						$('#clockin_dialog').remove();
+					})
+				)
+			);
+
+		clockin_dialog('Import project', content)
+	}
+
+	(function($) {
+	    var _remove = $.fn.remove;
+	    $.fn.remove = function() {
+	        this.trigger('remove');             // notify removal
+	        return _remove.apply(this, arguments); // call original
+	    };
+	})(jQuery);
+});
+</script>
+
+</body>
+</html>
