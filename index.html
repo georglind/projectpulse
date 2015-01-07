@@ -1,7 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="en" manifest="ppulse.manifest?reva1">
+<html lang="en" manifest="ppulse.manifest?reva2">
 <head>
-<title>Project Pulse</title>
+<title>ProPulsion</title>
+<!-- <base href="http://georglind.dk/propulsion/"> -->
 <meta http-equiv="content-type" content="text/html;charset=UTF-8"> 
 <meta charset="utf-8">
 <meta name="robots" content="index, follow">
@@ -10,10 +11,10 @@
 <meta name="keyword" content="todo, log, project, manage, clock in">
 
 <!-- Open Graph -->
-<meta property="og:title" content="Project Pulse">
-<meta property="og:url" content="http://georglind.dk/projectpulse">
-<meta property="og:site_name" content="georglind.dk/projectpulse">
-<meta property="og:image" content="http://georgling.dk/projectpulse/assets/icon/ppulse.jpg"/>
+<meta property="og:title" content="ProPulsion">
+<meta property="og:url" content="http://georglind.dk/propulsion">
+<meta property="og:site_name" content="georglind.dk/propulsion">
+<meta property="og:image" content="http://georgling.dk/propulsion/assets/icon/ppulse.jpg"/>
 <!-- Web App -->
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
@@ -65,19 +66,19 @@
 
 <div class="menu_center">
 <menu>
-<h1><span class="icon-heart"></span> Project Pulse</h1>
+<h1><span class="icon-heart"></span> ProPulsion</h1>
 </menu>
 </div>
 
 <div class="body"> <!-- open body -->
 
 <div id="clockins" class="clockins"></div>
-<div id="preload" class="waiting"><img src="./assets/img/load.gif"/><p>Please wait a moment. The app is loading...</p></div>
+<div id="preload" class="waiting"><img src="assets/img/load.gif"/><p>Please wait a moment. The app is loading...</p></div>
 
 <a id="more" class="clockin_more"><span style="">+</span> new project</a>
 
 <div class="clockin_thanks">
-<p>Project Pulse has been built using some great tools and libraries, and a lot of the credit goes their way. Here I list them all in random order:</p>
+<p>ProPulsion has been built using some great tools and libraries, and a lot of the credit goes their way. Here I cls them all in random order:</p>
 <ul>
 	<li><a href="http://www.jquery.com/">jQuery</a> &ndash; founded by John Resig.</li>
 	<li><a href="http://fortawesome.github.io/Font-Awesome/">Font Awesome</a> by Dave Gandy.</li>
@@ -89,13 +90,12 @@
 
 
 <script type="text/javascript" src="assets/js/sortable/Sortable.min.js"></script>
-<script type="text/javascript" src="assets/js/clockin.js"></script>
+<script type="text/javascript" src="assets/js/ppulse.js"></script>
 
-
-<script type="text/javascript">
+<script>
 $().ready( function() {
 
-	var list = $('#clockins');
+	var cls = $('#clockins');
 	var projects = {};
 	var store = [];
 	var pid = 0;
@@ -104,18 +104,10 @@ $().ready( function() {
 	// load current slot.
 	try {
 		var save_slot = parseInt(localStorage.getItem("current"));
-
-		if (isNaN(save_slot))
-		{
-			save_slot = 0;
-		}
-
+		if (isNaN(save_slot)) { save_slot = 0; }
 		var load_projects = localStorage.getItem("projects" + save_slot);
 		var save_slot = (save_slot + 1) % 10;
-	} 
-	catch (err)
-	{
-		console.log('Test01')
+	} catch (err) {
 		var load_projects = false;
 		var save_slot = 0;
 	}
@@ -123,113 +115,31 @@ $().ready( function() {
 	// load saved time
 	try {
 		var last_saved_time = localStorage.getItem("saved");
-	} 
-	catch (err)
-	{
-		console.log('Test02')
+	} catch (err) {
 		var last_saved_time = false;
 	}
 
 	// which models to load
-	if (load_projects == undefined || load_projects == false)
-	{	
+	if (load_projects == false) {	
 		$('#preload').remove();  // remove preloader
 
-		var wrap = $('<div data-project=' + pid + '></div>')
-				.on('remove', function(e) { if (e.target == this) { var l = $(this).attr('data-project'); delete projects[l]; } } );
-
-		list.append(wrap);
-		
-		projects[0] = new Project(wrap);
-		projects[0].setup();
-		pid = 1;
-	}
-	else
-	{
+		projects[0] = addProject(cls, pid);
+		pid += 1; 
+	} else {
 		store = $.parseJSON(load_projects);
 
-		console.log(store)
-
-		if (store.length > 0)
-		{
-			setTimeout( function(){ loadProjects(); }, 200);
-		}
-
-		function loadProjects()
-		{
-			$('#preload').remove(); // remove preloader
-
-			for (var i = 0; i < store.length; i++)
-			{
-				if (store[i] !== false)
-				{
-					var wrap = $('<div data-project=' + pid + '></div>')
-						.on('remove', function(e) { if (e.target == this) { var l = $(this).attr('data-project'); delete projects[l]; }});
-					
-					list.append(wrap);
-					projects[pid] = new Project(wrap);
-					projects[pid].load_from_object(store[i]);
-					// projects[pid].minimize();
-					
-					pid += 1;
-				}
-			}
-		}
+		if (store.length == 0) {
+			setTimeout( function() { 
+				$('#preload').remove();  // remove preloader
+				projects[0] = addProject(cls, pid); 
+				pid = 1; 
+			}, 200);
+		} else {
+			setTimeout( function(){ $('#preload').remove(); loadProjects(store); }, 200);
+		}	
 	}
 
-	setInterval(store_projects, 2000);
-
-	function store_projects() 
-	{
-		console.log('Test03')
-		if (!save_enabled)
-		{
-			return;
-		}
-
-		try 
-		{
-			var save_test = localStorage.getItem("saved");
-		}
-		catch (err) 
-		{
-			var save_test = false;
-		}
-
-		if (last_saved_time == save_test)
-		{
-			try 
-			{
-				var projectdump = [];
-				$('.clockin').each(function(){
-					var i = $(this).attr('data-project');
-
-					if (projects[i] != undefined) {
-						var dump = projects[i].dump();
-						projectdump.push(dump);	
-					}
-				});
-
-				projectdump = JSON.stringify(projectdump, null, null);
-
-				localStorage.setItem("current", save_slot)
-				localStorage.setItem("projects" + save_slot, projectdump);
-
-				last_saved_time = new Date().getTime();
-				localStorage.setItem("saved", last_saved_time)
-			}
-			catch(err)
-			{
-				console.log(err);
-				return;
-			}
-		}
-		else
-		{
-			save_enabled = false;
-			clockin_dialog('Other tabs open','<p>You have an instance of ClockIn open in another tab.</p><p>It is very messy to have multiple tabs overwriting the model data in turn.</p><p>Thus, saving has from now on been <i>disabled</i> for this tab.</p>', 'warning');
-		}
-	}
+	setInterval(storeProjects, 2000);
 
 	var container = document.getElementById("clockins");
 	var sort = new Sortable(container, {
@@ -240,19 +150,11 @@ $().ready( function() {
 	});
 
 	$('#more').css('display', 'block').click(function(e){
-		var wrap = $('<div data-project=' + pid + '></div>')
-				.on('remove', function(e) { if (e.target == this) { var l = $(this).attr('data-project'); delete projects[l]; }});
-		list.append(wrap);
-		
-		projects[pid] = new Project(wrap);
-		projects[pid].setup();
+		projects[pid] = addProject(cls, pid)
 		pid += 1;
 	});
 
-	var haspos = location.href.indexOf('#');
-
-	if (haspos > 0)
-	{
+	if (location.href.indexOf('#') > 0) {
 		var content = $('<div></div>')
 			.append('<p>You have visited a link, which contains a Clock In project. Do you wish to import it?.</p>')
 			.append($('<div class="center"></div>')
@@ -264,11 +166,11 @@ $().ready( function() {
 						var hash = location.href.substr(location.href.indexOf('#')+1);
 	
 						var wrap = $('<div data-project=' + pid + '></div>')
-						list.prepend(wrap);
+						cls.prepend(wrap);
 
-						var h = new Project(wrap);
+						var h = new Pproject(wrap);
 
-						if (h.load_from_string(hash)) 
+						if (h.loadFromString(hash))
 						{
 							projects[pid] = h;
 							pid += 1;
@@ -301,6 +203,71 @@ $().ready( function() {
 	        return _remove.apply(this, arguments); // call original
 	    };
 	})(jQuery);
+
+
+	function addProject(wrap, pid) {
+		var project = $('<div data-project=' + pid + '></div>')
+				.on('remove', function(e) { if (e.target == this) { var l = $(this).attr('data-project'); delete projects[l]; } } );
+
+		wrap.append(project);
+		
+		return new Pproject(project);
+	}
+
+	function loadProjects(store) {
+		for (var i = 0; i < store.length; i++) {
+			if (store[i] !== false) {
+				projects[pid] = addProject(cls, pid);
+				projects[pid].loadFromObject(store[i]);
+				pid += 1;
+			}
+		}
+	}
+
+	function storeProjects() 
+	{
+		console.log('Saving')
+		if (!save_enabled) { return; }
+
+		try  {
+			var save_test = localStorage.getItem("saved");
+		} catch (err) {
+			var save_test = false;
+		}
+
+		if (last_saved_time == save_test){
+			try {
+				var projectdump = [];
+				$('.clockin').each(function(){
+					var i = $(this).attr('data-project');
+
+					if (projects[i] != undefined) {
+						var dump = projects[i].exportToObject();
+						projectdump.push(dump);	
+					}
+				});
+
+				if (projectdump.length == 0) {
+					return false;
+				} else {
+					projectdump = JSON.stringify(projectdump, null, null);
+
+					localStorage.setItem("current", save_slot)
+					localStorage.setItem("projects" + save_slot, projectdump);
+
+					last_saved_time = new Date().getTime();
+					localStorage.setItem("saved", last_saved_time);
+				}
+			} catch(err) {
+				console.log(err);
+				return;
+			}
+		} else {
+			save_enabled = false;
+			clockin_dialog('Other tabs open','<p>You have an instance of ClockIn open in another tab.</p><p>It is very messy to have multiple tabs overwriting the model data in turn.</p><p>Thus, saving has from now on been <i>disabled</i> for this tab.</p>', 'warning');
+		}
+	}
+
 });
 </script>
 

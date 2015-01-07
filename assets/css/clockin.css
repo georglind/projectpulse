@@ -41,6 +41,10 @@ input::-moz-selection, textarea::-moz-selection {
 
 /* h1 */
 
+body.dim .clockin { opacity: .6; }
+html body.dim .running { opacity: 1; }
+
+
 menu {
 	margin: 20px 30px;
 	padding: 0;
@@ -70,6 +74,10 @@ h1 {
 	display: inline-block;
 	background-color: #FFBF00;
 	vertical-align: top;
+	transition: opacity .15s ease-in-out;
+   	-moz-transition: opacity .15s ease-in-out;
+   	-o-transition: opacity .15s ease-in-out;
+   	-webkit-transition: opacity .15s ease-in-out;
 }
 
 /* colors */
@@ -90,7 +98,7 @@ body .orange {
 }
 
 body .red {
-	background-color: #CC3529;
+	background-color: #DC4539;
 }
 
 body .purple {
@@ -109,7 +117,12 @@ body .purple {
 	font-weight: bold;
 	background: none;
 	border: 0;
-	outline: none
+}
+
+.clockin_title:focus {
+	outline: none;
+	background-color: gray;
+	background-color: rgba(255,255,255,.2);
 }
 
 .clockin_colors {
@@ -117,6 +130,7 @@ body .purple {
 	font-size: 12pt;
 	display: inline-block;
 	vertical-align: top;
+	color: #eee;
 	color: rgba(0,0,0,.3);
 	cursor: pointer;
 }
@@ -155,6 +169,8 @@ body .purple {
 }
 
 .clockin_desc:focus {
+	background-color: gray;
+	background-color: rgba(255,255,255,.2);
 	outline: none;
 }
 
@@ -256,6 +272,7 @@ body .purple {
 .clockin_task {
 	width: 280px;
 	margin-top: 10px;
+	border-bottom: 1px solid #888;
 	border-bottom: 1px solid rgba(0,0,0,.1);
 }
 
@@ -266,8 +283,13 @@ body .purple {
 	margin-left: 10px;
 	font-size: 11.5pt;
 	border: 0;
-	outline: none;
 	background: none;
+}
+
+.clockin_task input:focus {
+	background-color: gray;
+	background-color: rgba(255,255,255,.2);
+	outline: none;
 }
 
 .clockin_task_delete {
@@ -277,11 +299,12 @@ body .purple {
 	cursor: pointer;
 	vertical-align: middle;
 	display: inline-block;
+	color: #888;
 	color: rgba(0,0,0,.3);
 }
 
 .clockin_task_delete:hover {
-	color: rgba(0,0,0,1);
+	color: black;
 }
 
 .clockin_task_open .clockin_task_state, .clockin_task_closed .clockin_task_state {
@@ -358,6 +381,7 @@ body .purple {
 	right: 10px;
 	padding: 5px;
 	color: #888;
+	cursor: pointer;
 }
 
 .clockin_dialog_close:hover {
