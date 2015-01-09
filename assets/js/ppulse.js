@@ -98,7 +98,12 @@ function Pproject(container)
 
 	this.cycleColor = function() { var value = (color + 1) % Ppulse.colors.length; this.setColor(value); }
 	this.getColor = function() { return color; }
-	this.setColor = function(value) { project.removeClass(Ppulse.colors[color]).addClass(Ppulse.colors[value]); color = value; }
+	this.setColor = function(value) { 
+		value = parseInt(value);
+		if (isNaN(value) || value < 0) { value = 0; }
+		project.removeClass(Ppulse.colors[color]).addClass(Ppulse.colors[value]); 
+		color = value; 
+	}
 	this.setColor(color);
 
 	this.appendTo = function(container) { $(container).append(project); }
